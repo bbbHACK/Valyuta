@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Currency Converter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+:root{
+  --bg:#020617;
+  --card:rgba(255,255,255,.06);
+  --input:#ffffff;
+  --text:#ffffff;
+  --muted:#94a3b8;
+  --accent:#2563eb;
+}
+body.light{
+  --bg:#f1f5f9;
+  --card:#ffffff;
+  --input:#f8fafc;
+  --text:#020617;
+  --muted:#475569;
+}
+
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  min-height:100vh;
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:var(--text);
+  transition:.3s;
+}
+
+.top-controls{
+  position:fixed;
+  top:20px;
+  right:20px;
+  display:flex;
+  gap:10px;
+}
+.ctrl{
+  padding:10px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  background:var(--card);
+  backdrop-filter:blur(10px);
+}
+
+.wrapper{
+  display:flex;
+  gap:40px;
+  align-items:center;
+}
+
+.card{
+  width:380px;
+  padding:28px;
+  border-radius:22px;
+  background:var(--card);
+  backdrop-filter:blur(14px);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+h1{text-align:center;margin:0 0 18px;font-size:22px}
+
+.input-box{position:relative;margin-bottom:14px}
+.input-box input{
+  width:100%;
+  padding:16px 70px 16px 16px;
+  font-size:18px;
+  border:none;
+  border-radius:14px;
+  outline:none;
+  background:var(--input);
+}
+.currency{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:13px;
+  color:#777;
+}
+
+.swap{
+  display:flex;
+  justify-content:center;
+  margin:8px 0;
+}
+.swap button{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:none;
+  background:var(--accent);
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.status{
+  text-align:center;
+  font-size:13px;
+  color:#22c55e;
+  margin-top:8px;
+}
+
+.live{
+  min-width:230px;
+  padding:18px;
+  border-radius:18px;
+  background:var(--card);
+}
+.live-title{
+  font-size:12px;
+  opacity:.7;
+  margin-bottom:10px;
+}
+.rate{
+  display:flex;
+  justify-content:space-between;
+  margin:6px 0;
+}
+.rate strong{color:#22c55e}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+.modalBox{
+  background:var(--card);
+  padding:24px;
+  border-radius:18px;
+  width:260px;
+  text-align:center;
+}
+.option{
+  padding:12px;
+  border-radius:12px;
+  background:var(--bg);
+  margin-bottom:10px;
+  cursor:pointer;
+}
+.option:hover{
+  background:var(--accent);
+  color:#fff;
+}
+.modalBox button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:#64748b;
+  color:#fff;
+}
+/* === FIXED MODAL + ANIMATION === */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  backdrop-filter:blur(14px);
+}
+
+.modalBox{
+  background:var(--card);
+  padding:36px;
+  border-radius:32px;
+  width:360px;
+  text-align:center;
+  animation:pop .35s ease;
+}
+
+@keyframes pop{
+  0%   {transform:scale(.85); opacity:0}
+  60%  {transform:scale(1.05); opacity:1}
+  85%  {transform:scale(.98)}
+  100% {transform:scale(1)}
+}
+
+
+.option{
+  padding:16px;
+  border-radius:18px;
+  background:var(--bg);
+  margin-bottom:16px;
+  cursor:pointer;
+  transition:.25s cubic-bezier(.34,1.56,.64,1);
+  font-weight:600;
+}
+.option:hover{
+  background:var(--accent);
+  color:#fff;
+  transform:scale(1.04);
+}
+
+/* 📱 MOBILE RESPONSIVE */
+@media (max-width: 768px){
+
+  body{
+    align-items:flex-start;
+    padding-top:80px;
+  }
+
+  .wrapper{
+    flex-direction:column;
+    gap:24px;
+  }
+
+  .card{
+    width:92%;
+    padding:22px;
+  }
+
+  .live{
+    width:92%;
+    min-width:auto;
+  }
+
+  .top-controls{
+    top:12px;
+    right:12px;
+    gap:8px;
+  }
+
+  .ctrl{
+    padding:8px 12px;
+    font-size:13px;
+    border-radius:12px;
+  }
+
+  h1{
+    font-size:20px;
+  }
+
+  .input-box input{
+    font-size:16px;
+    padding:14px 60px 14px 14px;
+  }
+
+  .swap button{
+    width:40px;
+    height:40px;
+    font-size:16px;
+  }
+}
+
+@media (max-width: 480px){
+  .modalBox{
+    width:90%;
+    padding:24px;
+  }
+
+  .option{
+    padding:14px;
+    font-size:15px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="top-controls">
+  <div class="ctrl" id="langBtn">EN</div>
+  <div class="ctrl" id="themeBtn">🌙</div>
+</div>
+
+<div class="wrapper">
+
+  <div class="card">
+    <h1 id="title">Currency Converter</h1>
+
+    <div class="input-box">
+      <input id="main" value="1">
+      <span class="currency" id="curMain">USD</span>
+    </div>
+
+    <div class="swap">
+      <button id="swap">⇅</button>
+    </div>
+
+    <div class="input-box">
+      <input id="second" readonly>
+      <span class="currency" id="curSecond">RUB</span>
+    </div>
+
+    <div class="input-box">
+      <input id="third" readonly>
+      <span class="currency" id="curThird">UZS</span>
+    </div>
+
+    <div class="status">LIVE EXCHANGE RATES ✓</div>
+  </div>
+
+  <div class="live">
+    <div class="live-title" id="liveTitle">LIVE RATES</div>
+    <div class="rate"><span>USD → RUB</span><strong id="r1">–</strong></div>
+    <div class="rate"><span>USD → UZS</span><strong id="r2">–</strong></div>
+    <div class="rate"><span>RUB → UZS</span><strong id="r3">–</strong></div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modalBox">
+    <h3 id="modalTitle">Select base currency</h3>
+    <div id="options"></div>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const main=document.getElementById("main");
+const second=document.getElementById("second");
+const third=document.getElementById("third");
+
+const curMain=document.getElementById("curMain");
+const curSecond=document.getElementById("curSecond");
+const curThird=document.getElementById("curThird");
+
+const swapBtn=document.getElementById("swap");
+const modal=document.getElementById("modal");
+const options=document.getElementById("options");
+
+const r1=document.getElementById("r1");
+const r2=document.getElementById("r2");
+const r3=document.getElementById("r3");
+
+let rates={};
+let order=["USD","RUB","UZS"];
+
+const fmt=n=>Number(n).toLocaleString("en-US",{maximumFractionDigits:2});
+const clean=v=>v.replace(/,/g,"");
+
+async function loadRates(){
+  const res=await fetch("https://open.er-api.com/v6/latest/USD");
+  const d=await res.json();
+  rates=d.rates;
+
+  r1.textContent=fmt(rates.RUB);
+  r2.textContent=fmt(rates.UZS);
+  r3.textContent=fmt(rates.UZS/rates.RUB);
+
+  calc();
+}
+
+function calc(){
+  const base=order[0];
+  const v=Number(clean(main.value)||0);
+  const usd=v / rates[base];
+
+  second.value=fmt(usd * rates[order[1]]);
+  third.value =fmt(usd * rates[order[2]]);
+
+  curMain.textContent=order[0];
+  curSecond.textContent=order[1];
+  curThird.textContent=order[2];
+}
+
+main.oninput=e=>{
+  e.target.value=fmt(clean(e.target.value.replace(/[^0-9.]/g,"")));
+  calc();
+};
+
+/* ✅ MODAL SWAP */
+swapBtn.onclick=()=>{
+  options.innerHTML="";
+  order.slice(1).forEach(c=>{
+    const d=document.createElement("div");
+    d.className="option";
+    d.textContent=c;
+    d.onclick=()=>{
+      order=order.filter(x=>x!==c);
+      order.unshift(c);
+      closeModal();
+      calc();
+    };
+    options.appendChild(d);
+  });
+  modal.style.display="flex";
+};
+
+function closeModal(){
+  modal.style.display="none";
+}
+
+loadRates();
+
+/* THEME */
+const themeBtn=document.getElementById("themeBtn");
+themeBtn.onclick=()=>{
+  document.body.classList.toggle("light");
+  themeBtn.textContent=document.body.classList.contains("light")?"☀️":"🌙";
+};
+
+/* === LANGUAGE MODAL === */
+langBtn.onclick=()=>{
+  document.getElementById("modalTitle").textContent="Tilni tanlang";
+  options.innerHTML="";
+
+  ["EN","RU","UZ"].forEach(l=>{
+    const d=document.createElement("div");
+    d.className="option";
+    if(l==="EN") d.textContent="🇬🇧 English";
+    if(l==="RU") d.textContent="🇷🇺 Русский";
+    if(l==="UZ") d.textContent="🇺🇿 O‘zbekcha";
+    d.onclick=()=>{
+      setLang(l);
+      closeModal();
+    };
+    options.appendChild(d);
+  });
+
+  modal.style.display="flex";
+};
+
+function setLang(l){
+  lang=l.toLowerCase();
+  langBtn.textContent=l;
+
+  if(l==="EN"){
+    document.getElementById("title").textContent="Currency Converter";
+    document.getElementById("liveTitle").textContent="LIVE RATES";
+    document.querySelector(".status").textContent="LIVE EXCHANGE RATES ✓";
+  }
+
+  if(l==="RU"){
+    document.getElementById("title").textContent="Конвертер валют";
+    document.getElementById("liveTitle").textContent="КУРСЫ ВАЛЮТ";
+    document.querySelector(".status").textContent="ОБНОВЛЕНО ✓";
+  }
+
+  if(l==="UZ"){
+    document.getElementById("title").textContent="Valyuta konvertori";
+    document.getElementById("liveTitle").textContent="JONLI KURSLAR";
+    document.querySelector(".status").textContent="KURSLAR YANGILANDI ✓";
+  }
+}
+
+</script>
+
+</body>
+</html>
